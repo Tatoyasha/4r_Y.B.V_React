@@ -1,118 +1,116 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
+
+
+const user = {
+  _id: 1,
+  name: 'User',
+  avatar: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/batman_hero_avatar_comics-512.png',
+};
+
+
+const bot = {
+  _id: 2,
+  name: 'Bot',
+  avatar: 'https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/girl_female_woman_avatar-512.png',
+};
+
+
+const echo = (message) => {
+  return {
+    _id: Math.random(),
+    text: message.text,
+    createdAt: new Date(),
+    user: bot,
+  };
+};
+
+
+const ChatScreen = () => {
+
+  const [messages, setMessages] = useState([]);
+
+
+  useEffect(() => {
+    setMessages([
+      {
+        _id: 1,
+        text: 'Привіт я бот і буду дублювати ваші повідомлення',
+        createdAt: new Date(),
+        user: bot,
+      },
+    ]);
+  }, []);
+
+
+  const handleSend = (newMessage) => {
+    setMessages(GiftedChat.append(messages, newMessage));
+
+    setTimeout(() => {
+      setMessages((prevMessages) =>
+        GiftedChat.append(prevMessages, echo(newMessage[0]))
+      );
+    }, 1000);
+  };
+
+
+  const renderSend = (props) => {
+    return (
+      <Send {...props}>
+        <View style={styles.sendingContainer}>
+          <FontAwesome name="paper-plane" size={32} color="#6646ee" />
+        </View>
+      </Send>
+    );
+  };
+
+
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#6646ee',
           },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
+        }}
+        textStyle={{
+          right: {
+            color: '#fff',
           },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+        }}
+      />
+    );
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <GiftedChat
+      messages={messages}
+      user={user}
+      onSend={(newMessage) => handleSend(newMessage)}
+      renderBubble={renderBubble}
+      placeholder="Ваше повідомлення тут..."
+      showUserAvatar
+      alwaysShowSend
+      renderSend={renderSend}
+    />
   );
-}
+};
+
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  sendingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
-export default App;
+
+export default ChatScreen;
