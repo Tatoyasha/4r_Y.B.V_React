@@ -7,6 +7,7 @@ import { Image, View } from 'react-native';
 
 import Screen1 from './Screen1';
 import Screen2 from './Screen2';
+import NewsScreen from './NewsScreen'; // Додано NewsScreen
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,6 +36,15 @@ const App = () => {
           options={{
             tabBarLabel: 'Profile',
             tabBarIcon: () => TabBarIcon(require('./assets/profile.png')),
+          }}
+        />
+        <Tab.Screen
+          name="Latest News"
+          component={NewsScreen}
+          options={{
+            tabBarLabel: 'News',
+            // Додайте іконку за необхідності
+            tabBarIcon: () => TabBarIcon(require('./assets/news.png')),
           }}
         />
       </Tab.Navigator>
