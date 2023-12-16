@@ -43,7 +43,7 @@ const App = () => {
           component={NewsScreen}
           options={{
             tabBarLabel: 'News',
-            // Додайте іконку за необхідності
+          
             tabBarIcon: () => TabBarIcon(require('./assets/news.png')),
           }}
         />
