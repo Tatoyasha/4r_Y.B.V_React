@@ -52,14 +52,14 @@ const NewsScreen = () => {
             <Card.Content>
               <Text>{article.title}</Text>
               <Text>{article.description}</Text>
-              {/* Додайте інші поля за необхідності */}
+             
             </Card.Content>
           </Card>
         ))}
       <Button
         mode="contained"
         onPress={handleLoadMore}
-        disabled={loading} // Вимкніть кнопку, якщо йде завантаження
+        disabled={loading}
       >
         Load More
       </Button>
